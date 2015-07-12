@@ -7,7 +7,7 @@ const triplesecdown = require('triplesecdown')
 
 var db = levelup('/not/used/', {
   db: triplesecdown({
-    password: 'sup3r_s3cr3t!',
+    secret: 'sup3r_s3cr3t!',
     db: indexedDbDown,
   })
 })
