@@ -117,14 +117,14 @@ function encryptValue(secret, input, cb) {
     enc.run.bind(enc, { data: new Buffer(input) }),
   ], function(err, results){
     if (err) return cb(err)
-    var output = results[1].toString(ENCODING)
+    var output = results[1]
     cb(null, output)
   })
 }
 
 function decryptValue(secret, input, cb) {
   var dec = new Decryptor({ key: secret })
-  dec.run({ data: new Buffer(input, ENCODING) }, cb)
+  dec.run({ data: input }, cb)
 }
 
 // util
