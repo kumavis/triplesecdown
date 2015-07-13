@@ -6,6 +6,7 @@ const SHA256 = triplesec.SHA256
 const async = require('async')
 const bind = require('ap').partial
 const SALT_KEY = '__triplesec-key-salt__'
+const ENCODING = 'base64'
 
 module.exports = triplesecdown
 
@@ -81,13 +82,13 @@ function batch(_super, array, options, cb) {
 function loadKeyObfSalt(db, secret, cb) {
   db.__get(SALT_KEY, {}, function(err, salt){
     if (salt) {
-      db._salt = WordArray.from_buffer(salt)
+      db._salt = WordArray.from_buffer(new Buffer(salt, ENCODING))
       cb()
     } else {
       createObfuscationSalt(db, secret, function(err, salt){
         if (err) return cb(err)
         db._salt = salt
-        db.__put(SALT_KEY, salt.to_buffer(), {}, cb)
+        db.__put(SALT_KEY, salt.to_buffer().toString(ENCODING), {}, cb)
       })
     }
   })
@@ -105,7 +106,7 @@ function obfuscateKey(salt, input, cb) {
   var hash = new triplesec.hash.SHA256()
   var formattedInput = WordArray.from_buffer(new Buffer(salt.to_hex()+input))
   hash.update(formattedInput)
-  var output = hash.finalize().to_buffer()
+  var output = hash.finalize().to_buffer().toString(ENCODING)
   cb(null, output)
 }
 
@@ -116,14 +117,14 @@ function encryptValue(secret, input, cb) {
     enc.run.bind(enc, { data: new Buffer(input) }),
   ], function(err, results){
     if (err) return cb(err)
-    var output = results[1]
+    var output = results[1].toString(ENCODING)
     cb(null, output)
   })
 }
 
 function decryptValue(secret, input, cb) {
   var dec = new Decryptor({ key: secret })
-  dec.run({ data: new Buffer(input) }, cb)
+  dec.run({ data: new Buffer(input, ENCODING) }, cb)
 }
 
 // util
