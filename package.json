@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "ap": "^0.2.0",
-    "async": "^1.3.0",
+    "async": "^2.1.4",
     "triplesec": "^3.0.20"
   },
   "devDependencies": {
