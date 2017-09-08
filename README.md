@@ -12,3 +12,5 @@ var db = levelup('/not/used/', {
   })
 })
 ```
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/kumavis/triplesecdown.svg)](https://greenkeeper.io/)
